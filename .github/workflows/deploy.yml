@@ -27,6 +27,6 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/react-todo-app:latest
-          ${{ secrets.DOCKERHUB_USERNAME }}/react-todo-app:${{ github.sha }}
+          zyzmann/react-todo-app:latest
+          zyzmann/react-todo-app:${{ github.sha }}
 
