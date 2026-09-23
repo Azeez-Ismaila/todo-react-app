@@ -26,6 +26,8 @@ jobs:
       with:
         context: .
         push: true
+        # Tell Docker to build for both Intel/AMD and Apple Silicon architectures
+        platforms: linux/amd64,linux/arm64
         tags: |
           zyzmann/react-todo-app:latest
           zyzmann/react-todo-app:${{ github.sha }}
