@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: react-todo
+  namespace: argocd # Argo CD only looks for Applications in its own namespace
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Azeez-Ismaila/todo-react-app.git
+    targetRevision: main # Watch the main branch...
+    path: k8s            # ...and deploy everything in the k8s/ folder
+  destination:
+    server: https://kubernetes.default.svc # This same cluster
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true    # Delete resources that are removed from Git
+      selfHeal: true # Undo manual kubectl changes so the cluster always matches Git

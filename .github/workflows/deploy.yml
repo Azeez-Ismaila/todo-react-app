@@ -3,6 +3,19 @@ name: CI/CD Docker Build
 on:
   push:
     branches: [ "main" ]
+    # Changing only the Kubernetes/Argo CD files doesn't need a new image
+    paths-ignore:
+      - "k8s/**"
+      - "argocd/**"
+
+# Allows this workflow to commit the new image tag back to the repo
+permissions:
+  contents: write
+
+# Run one deploy at a time, in order, so image tags never go backwards
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
 
 jobs:
   build-and-push:
@@ -11,6 +24,8 @@ jobs:
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # full history, so the manifest commit can rebase if main moved on
 
     # Crucial Fix: Installs QEMU binary emulators so the runner can process ARM64 instructions safely
     - name: Set up QEMU
@@ -36,3 +51,15 @@ jobs:
           zyzmann/react-todo-app:latest
           zyzmann/react-todo-app:${{ github.sha }}
 
+    # GitOps: record the new image in Git. Argo CD (running in the cluster)
+    # sees this commit and rolls it out. [skip ci] stops this commit from
+    # triggering another build.
+    - name: Update Kubernetes manifest with new image tag
+      run: |
+        sed -i "s|image: zyzmann/react-todo-app:.*|image: zyzmann/react-todo-app:${{ github.sha }} # Updated automatically by GitHub Actions|" k8s/deployment.yaml
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add k8s/deployment.yaml
+        git commit -m "Deploy ${GITHUB_SHA::7} to Kubernetes [skip ci]" || { echo "Manifest already up to date"; exit 0; }
+        git pull --rebase origin main
+        git push origin HEAD:main
