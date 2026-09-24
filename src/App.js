@@ -180,7 +180,7 @@ export default function App() {
 							})
 						) : (
 							<Text size={'lg'} mt={'md'} color={'dimmed'}>
-								Nothing has been added to Tasks yet
+								Tasks Currently Empty
 							</Text>
 						)}
 						<Button
