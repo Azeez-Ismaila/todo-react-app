@@ -1,5 +1,5 @@
 # Stage 1: Build the React application
-FROM node:20-alpine AS build
+FROM node:20-slim AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -8,11 +8,12 @@ RUN npm run build
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
-# Clears the default Nginx landing page files first
+# Clear any default Nginx static files
 RUN rm -rf /usr/share/nginx/html/*
-# Copies the compiled build files
+# Copy the built assets directly into Nginx public directory
 COPY --from=build /app/build /usr/share/nginx/html
-# Copies the custom nginx routing rules
+# Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
+
