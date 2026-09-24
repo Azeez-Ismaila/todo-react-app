@@ -12,6 +12,10 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    # Crucial Fix: Installs QEMU binary emulators so the runner can process ARM64 instructions safely
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
       with:
@@ -26,6 +30,8 @@ jobs:
       with:
         context: .
         push: true
+        # Explicitly targets both Intel servers and your Apple Silicon Mac
+        platforms: linux/amd64,linux/arm64
         tags: |
           zyzmann/react-todo-app:latest
           zyzmann/react-todo-app:${{ github.sha }}

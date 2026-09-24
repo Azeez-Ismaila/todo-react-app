@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-todo-deployment
+  labels:
+    app: react-todo
+spec:
+  replicas: 2 # Kubernetes will run 2 identical copies of your app for redundancy
+  selector:
+    matchLabels:
+      app: react-todo
+  template:
+    metadata:
+      labels:
+        app: react-todo
+    spec:
+      containers:
+      - name: react-todo-container
+        image: zyzmann/react-todo-app:latest # Your cloud image
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+
