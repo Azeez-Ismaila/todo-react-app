@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: react-todo-container
-        image: zyzmann/react-todo-app:59fcca95ae7560977f20bfee86fd0b8f27377c5c # Updated automatically by GitHub Actions
+        image: zyzmann/react-todo-app:15dd3b9df544600d722d86e371c45e6c1124a2ee # Updated automatically by GitHub Actions
         imagePullPolicy: Always
         ports:
         - containerPort: 80
