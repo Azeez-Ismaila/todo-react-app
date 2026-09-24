@@ -140,7 +140,7 @@ export default function App() {
 									fontFamily: `Greycliff CF, ${theme.fontFamily}`,
 									fontWeight: 900,
 								})}>
-								My Tasks
+								My Tasks (v3)
 							</Title>
 							<ActionIcon
 								color={'blue'}
@@ -180,7 +180,7 @@ export default function App() {
 							})
 						) : (
 							<Text size={'lg'} mt={'md'} color={'dimmed'}>
-								Tasks Currently Empty
+								Tasks Currently Empty Please Treat
 							</Text>
 						)}
 						<Button
